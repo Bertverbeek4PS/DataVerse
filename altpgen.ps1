@@ -1,0 +1,1 @@
+﻿C:\Users\bverbeek\.vscode\extensions\ms-dynamics-smb.al-8.2.552672\bin\altpgen.exe -project:"C:\Users\bverbeek\Documents\GitHub\DataVerse" -packagecachepath:"C:\Users\bverbeek\Documents\GitHub\DataVerse\.alpackages" -serviceuri:"https://org13abfcc3.crm4.dynamics.com" -entities:new_employee -baseid:5200 -tabletype:CDS

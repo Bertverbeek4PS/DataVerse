@@ -22,6 +22,15 @@
             Description = 'Datum en tijdstip waarop de record is gemaakt.';
             Caption = 'Created On';
         }
+        field(3; CreatedBy; GUID)
+        {
+            ExternalName = 'createdby';
+            ExternalType = 'Lookup';
+            ExternalAccess = Read;
+            Description = 'De unieke id van de gebruiker die de record heeft gemaakt.';
+            Caption = 'Created By';
+            TableRelation = "CDS SystemUser".SystemUserId;
+        }
         field(4; ModifiedOn; Datetime)
         {
             ExternalName = 'modifiedon';
@@ -29,6 +38,74 @@
             ExternalAccess = Read;
             Description = 'Datum en tijdstip waarop de record is gewijzigd.';
             Caption = 'Modified On';
+        }
+        field(5; ModifiedBy; GUID)
+        {
+            ExternalName = 'modifiedby';
+            ExternalType = 'Lookup';
+            ExternalAccess = Read;
+            Description = 'De unieke id van de gebruiker die de record heeft gewijzigd.';
+            Caption = 'Modified By';
+            TableRelation = "CDS SystemUser".SystemUserId;
+        }
+        field(6; CreatedOnBehalfBy; GUID)
+        {
+            ExternalName = 'createdonbehalfby';
+            ExternalType = 'Lookup';
+            ExternalAccess = Read;
+            Description = 'De unieke id van de gemachtigde gebruiker die de record heeft gemaakt.';
+            Caption = 'Created By (Delegate)';
+            TableRelation = "CDS SystemUser".SystemUserId;
+        }
+        field(7; ModifiedOnBehalfBy; GUID)
+        {
+            ExternalName = 'modifiedonbehalfby';
+            ExternalType = 'Lookup';
+            ExternalAccess = Read;
+            Description = 'De unieke id van de gemachtigde gebruiker die de record heeft gewijzigd.';
+            Caption = 'Modified By (Delegate)';
+            TableRelation = "CDS SystemUser".SystemUserId;
+        }
+        field(8; CreatedByName; Text[100])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("CDS SystemUser".FullName where(SystemUserId = field(CreatedBy)));
+            ExternalName = 'createdbyname';
+            ExternalType = 'String';
+            ExternalAccess = Read;
+        }
+        field(10; CreatedOnBehalfByName; Text[100])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("CDS SystemUser".FullName where(SystemUserId = field(CreatedOnBehalfBy)));
+            ExternalName = 'createdonbehalfbyname';
+            ExternalType = 'String';
+            ExternalAccess = Read;
+        }
+        field(12; ModifiedByName; Text[100])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("CDS SystemUser".FullName where(SystemUserId = field(ModifiedBy)));
+            ExternalName = 'modifiedbyname';
+            ExternalType = 'String';
+            ExternalAccess = Read;
+        }
+        field(14; ModifiedOnBehalfByName; Text[100])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("CDS SystemUser".FullName where(SystemUserId = field(ModifiedOnBehalfBy)));
+            ExternalName = 'modifiedonbehalfbyname';
+            ExternalType = 'String';
+            ExternalAccess = Read;
+        }
+        field(22; OwningUser; GUID)
+        {
+            ExternalName = 'owninguser';
+            ExternalType = 'Lookup';
+            ExternalAccess = Read;
+            Description = 'Unieke id van de gebruiker die eigenaar is van de record.';
+            Caption = 'Owning User';
+            TableRelation = "CDS SystemUser".SystemUserId;
         }
         field(24; statecode; Option)
         {

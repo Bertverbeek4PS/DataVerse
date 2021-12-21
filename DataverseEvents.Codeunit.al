@@ -66,17 +66,31 @@ codeunit 50200 "Dataverse Events"
         IntegrationFieldMapping: Record "Integration Field Mapping";
         CDSEmployee: Record "CDS new_employee";
         Employee: Record Employee;
+        HumanResourceSetup: Record "Human Resources Setup";
     begin
         InsertIntegrationTableMapping(IntegrationTableMapping, 'EMPLOYEE', DATABASE::Employee, DATABASE::"CDS new_employee", CDSEmployee.FieldNo(new_employeeId), CDSEmployee.FieldNo(ModifiedOn), '', '', true);
 
-        InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("No."), CDSEmployee.FieldNo(new_No), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-        InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("First Name"), CDSEmployee.FieldNo(new_FirstName), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-        InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("Last Name"), CDSEmployee.FieldNo(new_LastName), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+        HumanResourceSetup.Get;
+        if HumanResourceSetup."Central Company" then begin
+            InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("No."), CDSEmployee.FieldNo(new_No), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("First Name"), CDSEmployee.FieldNo(new_FirstName), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("Last Name"), CDSEmployee.FieldNo(new_LastName), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+        end else begin
+            InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("No."), CDSEmployee.FieldNo(new_No), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("First Name"), CDSEmployee.FieldNo(new_FirstName), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+            InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("Last Name"), CDSEmployee.FieldNo(new_LastName), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+        end;
     end;
 
     local procedure InsertIntegrationTableMapping(var IntegrationTableMapping: Record "Integration Table Mapping"; MappingName: Code[20]; TableNo: Integer; IntegrationTableNo: Integer; IntegrationTableUIDFieldNo: Integer; IntegrationTableModifiedFieldNo: Integer; TableConfigTemplateCode: Code[10]; IntegrationTableConfigTemplateCode: Code[10]; SynchOnlyCoupledRecords: Boolean)
+    var
+        HumanResourceSetup: Record "Human Resources Setup";
     begin
-        IntegrationTableMapping.CreateRecord(MappingName, TableNo, IntegrationTableNo, IntegrationTableUIDFieldNo, IntegrationTableModifiedFieldNo, TableConfigTemplateCode, IntegrationTableConfigTemplateCode, SynchOnlyCoupledRecords, IntegrationTableMapping.Direction::ToIntegrationTable, 'CDS');
+        HumanResourceSetup.Get;
+        if HumanResourceSetup."Central Company" then
+            IntegrationTableMapping.CreateRecord(MappingName, TableNo, IntegrationTableNo, IntegrationTableUIDFieldNo, IntegrationTableModifiedFieldNo, TableConfigTemplateCode, IntegrationTableConfigTemplateCode, SynchOnlyCoupledRecords, IntegrationTableMapping.Direction::ToIntegrationTable, 'CDS')
+        else
+            IntegrationTableMapping.CreateRecord(MappingName, TableNo, IntegrationTableNo, IntegrationTableUIDFieldNo, IntegrationTableModifiedFieldNo, TableConfigTemplateCode, IntegrationTableConfigTemplateCode, SynchOnlyCoupledRecords, IntegrationTableMapping.Direction::FromIntegrationTable, 'CDS');
     end;
 
     //Field Mapping
@@ -95,15 +109,23 @@ codeunit 50200 "Dataverse Events"
         IntegrationFieldMapping: Record "Integration Field Mapping";
         CDSEmployee: Record "CDS new_employee";
         Employee: Record "Employee";
+        HumanResourceSetup: Record "Human Resources Setup";
     begin
         case IntegrationTableMappingName of
             'EMPLOYEE':
                 begin
                     InsertIntegrationTableMapping(IntegrationTableMapping, 'EMPLOYEE', DATABASE::Employee, DATABASE::"CDS new_employee", CDSEmployee.FieldNo(new_employeeId), CDSEmployee.FieldNo(ModifiedOn), '', '', true);
 
-                    InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("No."), CDSEmployee.FieldNo(new_No), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-                    InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("First Name"), CDSEmployee.FieldNo(new_FirstName), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
-                    InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("Last Name"), CDSEmployee.FieldNo(new_LastName), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+                    HumanResourceSetup.Get;
+                    if HumanResourceSetup."Central Company" then begin
+                        InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("No."), CDSEmployee.FieldNo(new_No), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+                        InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("First Name"), CDSEmployee.FieldNo(new_FirstName), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+                        InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("Last Name"), CDSEmployee.FieldNo(new_LastName), IntegrationFieldMapping.Direction::ToIntegrationTable, '', true, false);
+                    end else begin
+                        InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("No."), CDSEmployee.FieldNo(new_No), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+                        InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("First Name"), CDSEmployee.FieldNo(new_FirstName), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+                        InsertIntegrationFieldMapping('EMPLOYEE', Employee.FieldNo("Last Name"), CDSEmployee.FieldNo(new_LastName), IntegrationFieldMapping.Direction::FromIntegrationTable, '', true, false);
+                    end;
                     IsHandled := true;
                 end;
         end;

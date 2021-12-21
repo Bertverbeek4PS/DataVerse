@@ -12,13 +12,13 @@ tableextension 50200 EmployeeExt extends Employee
     var
         CRMIntegrationManagement: Codeunit "CRM Integration Management";
     begin
-        CRMIntegrationManagement.CreateNewRecordsInCRM(rec.RecordID);
+        //CRMIntegrationManagement.CreateNewRecordsInCRM(rec.RecordID);
     end;
 
     trigger OnAfterModify()
     var
         CRMIntegrationManagement: Codeunit "CRM Integration Management";
     begin
-        CRMIntegrationManagement.UpdateOneNow(rec.RecordId);
+        //CRMIntegrationManagement.UpdateOneNow(rec.RecordId);
     end;
 }

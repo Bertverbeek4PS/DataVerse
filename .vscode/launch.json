@@ -6,7 +6,7 @@
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
-            "environmentName": "bc19",
+            "environmentName": "test",
             "breakOnError": true,
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
